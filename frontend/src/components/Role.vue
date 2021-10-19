@@ -9,6 +9,7 @@
     />
     <div class="role-name">
       {{ role.name }}
+      <span v-if="count" class="count">{{ count }}</span>
     </div>
   </div>
 </template>
@@ -16,12 +17,13 @@
 <script>
 export default {
   name: "Role",
-  props: ["role"],
+  props: ["role", 'count'],
 };
 </script>
 
 <style scoped>
 .role {
+  position: relative;
   color: #f6f6f7;
   display: flex;
   align-items: center;
@@ -49,5 +51,13 @@ export default {
   width: 16px;
   height: 16px;
   margin-right: 4px;
+}
+
+.count {
+  font-size: 12px;
+  margin-left: auto;
+  position: absolute;
+  right: 4px;
+  color: #8f8f91;
 }
 </style>

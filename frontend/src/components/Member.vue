@@ -23,30 +23,33 @@
 
 <script>
 import MemberRoles from "@/components/MemberRoles";
+import { mapGetters } from 'vuex'
 
 export default {
   name: "Member",
-  props: ["source", "roles"],
+  props: ["source"],
   components: {
     MemberRoles,
   },
+  computed: {
+    ...mapGetters(['roles'])
+  },
   methods: {
-    getColor(/*member*/) {
-      return "#f6f6f7"
-      /*for (let i = 0; i < this.roles.length; i++) {
+    getColor(member) {
+      for (let i = 0; i < this.roles.length; i++) {
         if (i === this.roles.length - 1) return "#f6f6f7";
         if (this.roles[i].color === 0) return "#f6f6f7";
         if (member.roles.includes(this.roles[i].id)) {
           return this.roles[i].hex;
         }
-      }*/
+      }
     },
-    roleFilter(/*roleIds*/) {
+    roleFilter(roleIds) {
       const r = [];
-      /*roleIds.forEach((x) => {
+      roleIds.forEach((x) => {
         const y = this.roles.find((z) => z.id === x);
         if (y) r.push(y);
-      });*/
+      });
       return r;
     },
   },

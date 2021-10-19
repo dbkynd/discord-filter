@@ -5,9 +5,9 @@
       <span>Y&nbsp;&nbsp;|&nbsp;&nbsp;N</span>
     </div>
     <v-divider class="mb-2"></v-divider>
-    <div v-for="role in roles" :key="role.id">
+    <div v-for="(role, index) in roles" :key="role.id">
       <span class="flex-grow">
-        <Role :role="role" />
+        <Role :role="role" :count="roleCounts[index]"/>
       </span>
       <span>
         <input
@@ -29,21 +29,28 @@
 
 <script>
 import Role from "@/components/Role";
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   name: "RoleSelection",
-  props: ["roles"],
   components: {
     Role,
   },
+  computed: {
+    ...mapGetters(['roles']),
+    ...mapState(['roleCounts'])
+  },
   methods: {
     checkedYes(event, role) {
-      if (event.target.checked) role.selected = "Y";
-      else role.selected = null;
+      if (event.target.checked) this.updateRole(role, "Y");
+      else this.updateRole(role, null);
     },
     checkedNo(event, role) {
-      if (event.target.checked) role.selected = "N";
-      else role.selected = null;
+      if (event.target.checked) this.updateRole(role, "N");
+      else this.updateRole(role, null);
+    },
+    updateRole(role, value) {
+      this.$store.commit('updateRole', { role, value })
     },
   },
 };
