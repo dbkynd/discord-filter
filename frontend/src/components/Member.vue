@@ -1,14 +1,23 @@
 <template>
   <div class="member-container">
-    <span v-if="member.displayAvatarURL">
-      <img :src="member.displayAvatarURL" alt="avatar" />
-    </span>
-    <span class="name" :style="`color:#${getColor(member)};`">
-      {{ member.displayName }} {{ member.tag }}
-    </span>
-    <span>
-      <MemberRoles :roles="roleFilter(member.roles)" />
-    </span>
+    <v-row>
+      <v-col cols="5" class="center-items">
+        <v-avatar class="mr-3">
+          <img :src="member.displayAvatarURL" alt="avatar" />
+        </v-avatar>
+        <div style="display: block; line-height: 1.25em">
+          <div class="name" :style="`color:${getColor(member)};`">
+            {{ member.displayName }}
+          </div>
+          <div class="tag">@{{ member.tag }}</div>
+        </div>
+      </v-col>
+      <v-col cols="7" class="center-items">
+        <span>
+          <MemberRoles :roles="roleFilter(member.roles)" />
+        </span>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -24,9 +33,10 @@ export default {
   methods: {
     getColor(member) {
       for (let i = 0; i < this.roles.length; i++) {
-        if (i === this.roles.length - 1) return "fff";
+        if (i === this.roles.length - 1) return "#f6f6f7";
+        if (this.roles[i].color === 0) return "#f6f6f7";
         if (member.roles.includes(this.roles[i].id)) {
-          return parseInt(this.roles[i].color).toString(16);
+          return this.roles[i].hex;
         }
       }
     },
@@ -49,13 +59,27 @@ img {
   border-radius: 20px;
 }
 
+.center-items {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 .name {
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .member-container {
-  background-color: #4e4e4e;
-  margin-top: 5px;
+  background-color: #36393f;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+}
+
+.tag {
+  color: #72767d;
+  font-size: 14px;
+  font-weight: 400;
 }
 </style>

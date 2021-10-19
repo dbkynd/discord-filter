@@ -1,24 +1,27 @@
 <template>
   <v-app>
-    <LoadingOverlay :loading="loading" :error="error" @on:refresh="refresh" />
     <v-app-bar app>
       <v-avatar>
         <img src="@/assets/logo.png" alt="icon" />
       </v-avatar>
       <v-app-bar-title class="ml-3">Member Filter</v-app-bar-title>
     </v-app-bar>
-    <v-main>
+    <v-main class="mt-3">
       <v-row v-if="!loading">
         <v-col cols="12">
-          <div class="refresh">
-            <v-btn @click="refresh" color="primary">Refresh</v-btn>
+          <div>
+            <v-btn @click="refresh" color="primary" class="mx-3">
+              Refresh
+              <v-icon>mdi-refresh</v-icon>
+            </v-btn>
+            <FilterDialog :enabled="filterDialog" />
           </div>
-          <div>Count: {{ count }}</div>
         </v-col>
       </v-row>
       <v-row>
         <v-col cols="3"></v-col>
         <v-col cols="6">
+          <div class="count">Results: {{ count }}</div>
           <div v-for="member in displayMembers" :key="member.userId">
             <Member :member="member" :roles="orderedRoles" />
           </div>
@@ -26,18 +29,21 @@
         <v-col cols="3"></v-col>
       </v-row>
     </v-main>
+    <LoadingOverlay :loading="loading" :error="error" @on:refresh="refresh" />
   </v-app>
 </template>
 
 <script>
 import Member from "@/components/Member";
 import LoadingOverlay from "@/components/LoadingOverlay";
+import FilterDialog from "@/components/FilterDialog";
 
 export default {
   name: "App",
   components: {
     Member,
     LoadingOverlay,
+    FilterDialog,
   },
   data() {
     return {
@@ -46,6 +52,7 @@ export default {
       loading: true,
       error: false,
       sorted: [],
+      filterDialog: false,
     };
   },
   computed: {
@@ -84,9 +91,11 @@ export default {
     async getRoles() {
       await this.$axios.get("/roles").then(({ data }) => {
         this.roles = data.map((x) => {
+          const color = parseInt(x.color);
+          const hex = `#${color.toString(16)}`;
           return {
             ...x,
-            hex: `#${parseInt(x.color).toString(16)}`,
+            hex: color === 0 ? "#b9bbbe" : hex,
           };
         });
       });
@@ -114,7 +123,7 @@ export default {
   color: #2c3e50;
 }
 
-.refresh {
-  z-index: 100;
+.count {
+  color: #fff;
 }
 </style>

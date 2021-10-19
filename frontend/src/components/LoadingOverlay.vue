@@ -1,5 +1,5 @@
 <template>
-  <v-overlay class="overlay" :value="loading" z-index="10">
+  <v-overlay class="overlay" :value="loading">
     <div v-if="!error">
       <div class="mb-3">Fetching Armory Members</div>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
