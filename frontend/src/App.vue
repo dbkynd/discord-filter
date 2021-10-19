@@ -5,33 +5,31 @@
         <img src="@/assets/logo.png" alt="icon" />
       </v-avatar>
       <v-toolbar-title class="ml-3">Armory Member Filter</v-toolbar-title>
+      <v-spacer />
+      <div class="count" v-if="!loading">Results: {{ count }}</div>
+      <v-spacer></v-spacer>
+      <v-btn @click="refresh" color="primary" class="mx-3">
+        Refresh
+        <v-icon>mdi-refresh</v-icon>
+      </v-btn>
     </v-app-bar>
     <v-main class="mt-3" v-if="!loading">
       <v-row>
-        <v-col cols="12">
-          <v-spacer />
-          <v-btn @click="refresh" color="primary" class="mx-3">
-            Refresh
-            <v-icon>mdi-refresh</v-icon>
-          </v-btn>
-        </v-col>
+        <v-col cols="1"></v-col>
+        <v-col cols="6" style="padding-bottom: 0"> </v-col>
       </v-row>
       <v-row>
-        <v-col cols="3"></v-col>
+        <v-col cols="1"></v-col>
         <v-col cols="6">
-          <Filters :filters="filters" />
-          <v-container>
-            <v-row class="count">
-              Results: {{ count }}
-              <v-spacer />
-              <FilterDialog :enabled="filterDialog" />
-            </v-row>
-          </v-container>
-          <div v-for="member in displayMembers" :key="member.userId">
+          <div v-for="member in filteredMembers" :key="member.userId">
             <Member :member="member" :roles="orderedRoles" />
           </div>
         </v-col>
-        <v-col cols="3"></v-col>
+        <v-col cols="1"></v-col>
+        <v-col cols="3">
+          <RoleSelection :roles="orderedRoles" />
+        </v-col>
+        <v-col cols="1"></v-col>
       </v-row>
     </v-main>
     <LoadingOverlay :loading="loading" :error="error" @on:refresh="refresh" />
@@ -41,16 +39,14 @@
 <script>
 import Member from "@/components/Member";
 import LoadingOverlay from "@/components/LoadingOverlay";
-import FilterDialog from "@/components/FilterDialog";
-import Filters from "@/components/Filters";
+import RoleSelection from "@/components/RoleSelection";
 
 export default {
   name: "App",
   components: {
     Member,
     LoadingOverlay,
-    FilterDialog,
-    Filters,
+    RoleSelection,
   },
   data() {
     return {
@@ -59,18 +55,20 @@ export default {
       loading: true,
       error: false,
       sorted: [],
-      filterDialog: false,
-      filters: [
-        {
-          key: "has",
-          value: "1234",
-          name: "Moderators",
-        },
-      ],
     };
   },
   computed: {
-    displayMembers() {
+    filteredMembers() {
+      if (!this.yesRoles.length && !this.noRoles.length)
+        return this.sortedMembers;
+      return this.sortedMembers.filter((member) => {
+        return (
+          this.yesRoles.every((x) => member.roles.includes(x)) &&
+          this.noRoles.every((x) => !member.roles.includes(x))
+        );
+      });
+    },
+    sortedMembers() {
       return [...this.members].sort((a, b) => {
         const c = a.displayName.toLowerCase();
         const d = b.displayName.toLowerCase();
@@ -80,12 +78,22 @@ export default {
       });
     },
     count() {
-      return this.displayMembers.length;
+      return this.filteredMembers.length;
     },
     orderedRoles() {
       return [...this.roles]
         .sort((a, b) => b.rawPosition - a.rawPosition)
         .slice(0, -1);
+    },
+    yesRoles() {
+      return this.orderedRoles
+        .filter((x) => x.selected === "Y")
+        .map((x) => x.id);
+    },
+    noRoles() {
+      return this.orderedRoles
+        .filter((x) => x.selected === "N")
+        .map((x) => x.id);
     },
   },
   mounted() {
@@ -110,6 +118,7 @@ export default {
           return {
             ...x,
             hex: color === 0 ? "#b9bbbe" : hex,
+            selected: null,
           };
         });
       });

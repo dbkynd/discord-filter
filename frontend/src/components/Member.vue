@@ -73,7 +73,7 @@ img {
 .member-container {
   background-color: #36393f;
   padding: 8px 16px;
-  margin-top: 10px;
+  margin-bottom: 10px;
   border-radius: 6px;
 }
 
