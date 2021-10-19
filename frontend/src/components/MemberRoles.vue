@@ -29,19 +29,22 @@ export default {
 
 <style scoped>
 .chips {
-  color: #f6f6f7;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 4px;
 }
 
 .chip {
+  color: #f6f6f7;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
   background: #292b2f;
   font-size: 12px;
   padding: 4px;
   margin: 0 4px 4px 0;
   font-weight: 500;
   border-radius: 4px;
+  overflow-wrap: unset;
 }
 
 .color-dot {

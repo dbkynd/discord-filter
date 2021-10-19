@@ -4,10 +4,10 @@
       <v-avatar>
         <img src="@/assets/logo.png" alt="icon" />
       </v-avatar>
-      <v-app-bar-title class="ml-3">Member Filter</v-app-bar-title>
+      <v-toolbar-title class="ml-3">Armory Member Filter</v-toolbar-title>
     </v-app-bar>
-    <v-main class="mt-3">
-      <v-row v-if="!loading">
+    <v-main class="mt-3" v-if="!loading">
+      <v-row>
         <v-col cols="12">
           <div>
             <v-btn @click="refresh" color="primary" class="mx-3">
@@ -21,6 +21,7 @@
       <v-row>
         <v-col cols="3"></v-col>
         <v-col cols="6">
+          <Filters :filters="filters" />
           <div class="count">Results: {{ count }}</div>
           <div v-for="member in displayMembers" :key="member.userId">
             <Member :member="member" :roles="orderedRoles" />
@@ -37,6 +38,7 @@
 import Member from "@/components/Member";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import FilterDialog from "@/components/FilterDialog";
+import Filters from "@/components/Filters";
 
 export default {
   name: "App",
@@ -44,6 +46,7 @@ export default {
     Member,
     LoadingOverlay,
     FilterDialog,
+    Filters,
   },
   data() {
     return {
@@ -53,6 +56,13 @@ export default {
       error: false,
       sorted: [],
       filterDialog: false,
+      filters: [
+        {
+          key: "has",
+          value: "1234",
+          name: "Moderators",
+        },
+      ],
     };
   },
   computed: {

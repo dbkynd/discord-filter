@@ -29,7 +29,7 @@ app.get('/members', async (req, res, next) => {
     members.forEach((x) => {
       array.push({ member: x, tag: x.user.tag })
     })
-    res.status(200).json(array)
+    res.status(200).json(array.slice(0, 100))
   } catch (e) {
     next(e)
   }
