@@ -7,20 +7,20 @@
 </template>
 
 <script>
-import Role from "@/components/Role";
+import Role from '@/components/Role'
 
 export default {
-  name: "MemberRoles",
-  props: ["roles"],
+  name: 'MemberRoles',
+  props: ['roles'],
   components: {
     Role,
   },
   computed: {
     orderedRoles() {
-      return [...this.roles].sort((a, b) => b.rawPosition - a.rawPosition);
+      return [...this.roles].sort((a, b) => b.rawPosition - a.rawPosition)
     },
   },
-};
+}
 </script>
 
 <style scoped>

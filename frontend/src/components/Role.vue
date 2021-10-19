@@ -16,9 +16,9 @@
 
 <script>
 export default {
-  name: "Role",
-  props: ["role", 'count'],
-};
+  name: 'Role',
+  props: ['role', 'count'],
+}
 </script>
 
 <style scoped>

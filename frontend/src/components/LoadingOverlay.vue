@@ -14,14 +14,14 @@
 
 <script>
 export default {
-  name: "LoadingOverlay",
-  props: ["loading", "error"],
+  name: 'LoadingOverlay',
+  props: ['loading', 'error'],
   methods: {
     refresh() {
-      this.$emit("refresh");
+      this.$emit('refresh')
     },
   },
-};
+}
 </script>
 
 <style scoped>
