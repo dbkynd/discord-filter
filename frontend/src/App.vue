@@ -9,20 +9,24 @@
     <v-main class="mt-3" v-if="!loading">
       <v-row>
         <v-col cols="12">
-          <div>
-            <v-btn @click="refresh" color="primary" class="mx-3">
-              Refresh
-              <v-icon>mdi-refresh</v-icon>
-            </v-btn>
-            <FilterDialog :enabled="filterDialog" />
-          </div>
+          <v-spacer />
+          <v-btn @click="refresh" color="primary" class="mx-3">
+            Refresh
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
         </v-col>
       </v-row>
       <v-row>
         <v-col cols="3"></v-col>
         <v-col cols="6">
           <Filters :filters="filters" />
-          <div class="count">Results: {{ count }}</div>
+          <v-container>
+            <v-row class="count">
+              Results: {{ count }}
+              <v-spacer />
+              <FilterDialog :enabled="filterDialog" />
+            </v-row>
+          </v-container>
           <div v-for="member in displayMembers" :key="member.userId">
             <Member :member="member" :roles="orderedRoles" />
           </div>
