@@ -21,9 +21,11 @@
       <v-row>
         <v-col cols="1"></v-col>
         <v-col cols="6">
-          <div v-for="member in filteredMembers" :key="member.userId">
-            <Member :member="member" :roles="orderedRoles" />
-          </div>
+          <virtual-list style="height: 900px; overflow-y: auto;"
+          :data-key="'userId'"
+          :data-sources="filteredMembers"
+          :data-component="itemComponent"
+          />
         </v-col>
         <v-col cols="1"></v-col>
         <v-col cols="3">
@@ -40,21 +42,23 @@
 import Member from "@/components/Member";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import RoleSelection from "@/components/RoleSelection";
+import VirtualList from 'vue-virtual-scroll-list'
 
 export default {
   name: "App",
   components: {
-    Member,
     LoadingOverlay,
     RoleSelection,
+    'virtual-list': VirtualList
+    // Member,
   },
   data() {
     return {
+      itemComponent: Member,
       roles: [],
       members: [],
       loading: true,
       error: false,
-      sorted: [],
     };
   },
   computed: {
@@ -149,4 +153,13 @@ export default {
 .count {
   color: #fff;
 }
+
+.hide {
+  display: none;
+}
+
+.scroller {
+  height: 100%;
+}
+
 </style>
