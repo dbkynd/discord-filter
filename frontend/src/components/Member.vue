@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="member-container">
     <span v-if="member.displayAvatarURL">
       <img :src="member.displayAvatarURL" alt="avatar" />
     </span>
@@ -24,7 +24,7 @@ export default {
   methods: {
     getColor(member) {
       for (let i = 0; i < this.roles.length; i++) {
-        if (i === this.roles.length - 1) return "000";
+        if (i === this.roles.length - 1) return "fff";
         if (member.roles.includes(this.roles[i].id)) {
           return parseInt(this.roles[i].color).toString(16);
         }
@@ -52,5 +52,10 @@ img {
 .name {
   font-size: 20px;
   font-weight: 600;
+}
+
+.member-container {
+  background-color: #4e4e4e;
+  margin-top: 5px;
 }
 </style>
