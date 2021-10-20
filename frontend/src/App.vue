@@ -10,9 +10,13 @@
         {{ count }}
       </div>
       <v-spacer></v-spacer>
+      <v-btn class="mr-3" color="green" @click="list">
+        Generate List
+        <v-icon class="ml-1">mdi-view-list-outline</v-icon>
+      </v-btn>
       <v-btn color="primary" @click="refresh">
         Refresh
-        <v-icon>mdi-refresh</v-icon>
+        <v-icon class="ml-1">mdi-refresh</v-icon>
       </v-btn>
     </v-app-bar>
     <v-main v-if="!loading" class="mt-6">
@@ -105,6 +109,14 @@ export default {
     },
   },
   methods: {
+    list() {
+      const tags = this.searchFilter.map((x) => `${x.tag}</br>`).join('')
+      const tab = window.open('about:blank', '_blank')
+      tab.document.write(
+        `<html lang="en"><head><title>Filtered Member List</title></head><body>${tags}</body></html>`,
+      )
+      tab.document.close()
+    },
     refresh() {
       this.members = []
       this.error = false
