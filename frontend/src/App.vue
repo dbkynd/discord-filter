@@ -4,7 +4,7 @@
       <v-avatar>
         <img src="@/assets/logo.png" alt="icon" />
       </v-avatar>
-      <v-toolbar-title class="ml-3">Armory Member Filter</v-toolbar-title>
+      <v-toolbar-title class="ml-3">Member Filter</v-toolbar-title>
       <v-spacer />
       <div v-if="!loading" class="count">
         {{ count }}
