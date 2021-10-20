@@ -20,7 +20,7 @@
       </v-btn>
     </v-app-bar>
     <v-main v-if="!loading" class="mt-6">
-      <v-row class="mt-4">
+      <v-row>
         <v-col cols="1"></v-col>
         <v-col cols="6">
           <v-text-field
@@ -29,6 +29,12 @@
             clearable
             append-icon="mdi-magnify"
           />
+        </v-col>
+        <v-col cols="5"></v-col>
+      </v-row>
+      <v-row class="pt-0 mt-0">
+        <v-col cols="1"></v-col>
+        <v-col cols="6">
           <VirtualList
             style="height: 900px; overflow-y: auto"
             :data-key="'userId'"
