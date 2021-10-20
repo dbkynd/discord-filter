@@ -1,11 +1,11 @@
+import cors from 'cors'
 import Discord, { Client, Intents } from 'discord.js'
 import express from 'express'
 import morgan from 'morgan'
-import cors from 'cors'
 
 const app = express()
 
-app.use(morgan('dev'))
+app.use(morgan('combined'))
 app.use(
   cors({
     origin: process.env.WEB_URL || 'http://localhost:8080',
