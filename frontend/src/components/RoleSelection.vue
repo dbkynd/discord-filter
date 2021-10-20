@@ -14,13 +14,13 @@
           type="checkbox"
           name="has"
           :checked="role.selected === 'Y'"
-          @click="checkedYes($event, role)"
+          @click="checked($event, role, 'Y')"
         />
         <input
           type="checkbox"
           name="not"
           :checked="role.selected === 'N'"
-          @click="checkedNo($event, role)"
+          @click="checked($event, role, 'N')"
         />
       </span>
     </div>
@@ -41,12 +41,8 @@ export default {
     ...mapState(['roleCounts']),
   },
   methods: {
-    checkedYes(event, role) {
-      if (event.target.checked) this.updateRole(role, 'Y')
-      else this.updateRole(role, null)
-    },
-    checkedNo(event, role) {
-      if (event.target.checked) this.updateRole(role, 'N')
+    checked(event, role, value) {
+      if (event.target.checked) this.updateRole(role, value)
       else this.updateRole(role, null)
     },
     updateRole(role, value) {

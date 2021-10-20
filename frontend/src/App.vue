@@ -6,14 +6,16 @@
       </v-avatar>
       <v-toolbar-title class="ml-3">Armory Member Filter</v-toolbar-title>
       <v-spacer />
-      <div v-if="!loading" class="count">Results: {{ count }}</div>
+      <div v-if="!loading" class="count">
+        {{ count }}
+      </div>
       <v-spacer></v-spacer>
-      <v-btn color="primary" class="mx-3" @click="refresh">
+      <v-btn color="primary" @click="refresh">
         Refresh
         <v-icon>mdi-refresh</v-icon>
       </v-btn>
     </v-app-bar>
-    <v-main v-if="!loading" class="mt-3">
+    <v-main v-if="!loading" class="mt-6">
       <v-row class="mt-4">
         <v-col cols="1"></v-col>
         <v-col cols="6">
@@ -23,11 +25,11 @@
             clearable
             append-icon="mdi-magnify"
           />
-          <virtual-list
+          <VirtualList
             style="height: 900px; overflow-y: auto"
             :data-key="'userId'"
             :data-sources="searchFilter"
-            :data-component="itemComponent"
+            :data-component="MemberComponent"
           />
         </v-col>
         <v-col cols="1"></v-col>
@@ -37,7 +39,7 @@
         <v-col cols="1"></v-col>
       </v-row>
     </v-main>
-    <LoadingOverlay :loading="loading" :error="error" @on:refresh="refresh" />
+    <LoadingOverlay :loading="loading" :error="error" @refresh="refresh" />
   </v-app>
 </template>
 
@@ -53,11 +55,11 @@ export default {
   components: {
     LoadingOverlay,
     RoleSelection,
-    'virtual-list': VirtualList,
+    VirtualList,
   },
   data() {
     return {
-      itemComponent: Member,
+      MemberComponent: Member,
       members: [],
       loading: true,
       error: false,
@@ -67,35 +69,25 @@ export default {
   computed: {
     ...mapGetters(['roles', 'yesRoles', 'noRoles']),
     searchFilter() {
-      if (!this.search) return this.filteredMembers
-      return this.filteredMembers.filter((member) => {
+      if (!this.search) return this.roleFilter
+      return this.roleFilter.filter((member) => {
         const lowerName = member.displayName.toLowerCase()
         const lowerTag = member.tag.toLowerCase()
         const lowerSearch = this.search.toLowerCase()
         return lowerName.includes(lowerSearch) || lowerTag.includes(lowerSearch)
       })
     },
-    filteredMembers() {
-      if (!this.yesRoles.length && !this.noRoles.length)
-        return this.sortedMembers
-      return this.sortedMembers.filter((member) => {
+    roleFilter() {
+      if (!this.yesRoles.length && !this.noRoles.length) return this.members
+      return [...this.members].filter((member) => {
         return (
           this.yesRoles.every((x) => member.roles.includes(x)) &&
           this.noRoles.every((x) => !member.roles.includes(x))
         )
       })
     },
-    sortedMembers() {
-      return [...this.members].sort((a, b) => {
-        const c = a.displayName.toLowerCase()
-        const d = b.displayName.toLowerCase()
-        if (c < d) return -1
-        if (d > c) return 1
-        return 0
-      })
-    },
     count() {
-      return this.filteredMembers.length
+      return this.searchFilter.length
     },
   },
   mounted() {
@@ -129,15 +121,22 @@ export default {
       })
     },
     async getMembers() {
-      await this.$axios.get('/members').then(
-        ({ data }) =>
-          (this.members = data.map((x) => {
+      await this.$axios.get('/members').then(({ data }) => {
+        this.members = data
+          .map((x) => {
             return {
               ...x.member,
               tag: x.tag,
             }
-          })),
-      )
+          })
+          .sort((a, b) => {
+            const c = a.displayName.toLowerCase()
+            const d = b.displayName.toLowerCase()
+            if (c < d) return -1
+            if (d > c) return 1
+            return 0
+          })
+      })
     },
   },
 }
@@ -153,13 +152,6 @@ export default {
 
 .count {
   color: #fff;
-}
-
-.hide {
-  display: none;
-}
-
-.scroller {
-  height: 100%;
+  font-size: 28px;
 }
 </style>
